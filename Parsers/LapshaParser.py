@@ -65,4 +65,4 @@ class LapshaParser:
 
 parser = LapshaParser()
 df = parser.get_articles()
-df.to_csv('Data/lapsha.csv', index=False)
+df.to_csv('../Data/panorama.csv', index = False)

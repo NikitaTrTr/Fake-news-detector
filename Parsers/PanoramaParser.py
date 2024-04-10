@@ -38,6 +38,7 @@ class PanoramaParser:
 parser = PanoramaParser()
 dateFrom, dateTo = date(2023, 4, 8), date(2024, 4, 8)
 df = parser.get_articles(dateFrom, dateTo)
+df.to_csv('../Data/panorama.csv', index = False)
 
 
 
