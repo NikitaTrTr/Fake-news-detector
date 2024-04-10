@@ -9,6 +9,7 @@ class LentaParser:
     def _get_url(self, param_dict: dict) -> str:
         url = 'https://lenta.ru/search/v2/process?' \
               + 'size={}&'.format(param_dict['size']) \
+              + 'domain=1&' \
               + 'modified%2Cformat=yyyy-MM-dd&' \
               + 'modified%2Cfrom={}&'.format(param_dict['dateFrom']) \
               + 'modified%2Cto={}'.format(param_dict['dateTo'])
@@ -19,6 +20,7 @@ class LentaParser:
         r = rq.get(url, headers={'User-Agent': UserAgent().chrome})
         search_table = pd.DataFrame(r.json()['matches'])
         return search_table
+
     def get_articles(self,
                      param_dict,
                      time_step=37) -> pd.DataFrame:
@@ -42,12 +44,16 @@ class LentaParser:
         return out
 
 
-size = 600
+size = 500
 dateFrom = '2023-04-08'
 dateTo = "2024-04-08"
 param_dict = {'size': str(size),
               'dateFrom': dateFrom,
               'dateTo': dateTo}
+
 parser = LentaParser()
-df = parser.get_articles(param_dict=param_dict, time_step=5)
-df.to_csv('../Data/lenta.csv', index = False)
+df = parser.get_articles(param_dict=param_dict, time_step=8)
+
+df1 = df.dropna(subset=['text'])
+df2 = df1[df1['text'] != '']
+df2.to_csv('../Data/lenta.csv', index = False)
