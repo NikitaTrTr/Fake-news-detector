@@ -7,7 +7,7 @@ from nltk.tokenize import word_tokenize
 from pymorphy2 import MorphAnalyzer
 import pickle
 warnings.filterwarnings('ignore')
-
+from transformers import TextClassificationPipeline, AutoTokenizer
 
 def get_mean_w2v_vector(sentence):
     model = pickle.load(open('../Models/word2vecmodel.pkl', 'rb'))
@@ -59,7 +59,7 @@ def vectorize(text, vectors_dim = 300):
 
 
 def rubert_predict_proba(query, model):
-    tokenizer = AutoTokenizer.from_pretrained('.Models/rubert/', return_tensors='pt')
+    tokenizer = AutoTokenizer.from_pretrained('./Models/rubert/', return_tensors='pt')
     pipe = TextClassificationPipeline(model=model, tokenizer=tokenizer, device=0)
     
     tokenized_query = tokenizer(query, truncation=True, max_length=50, padding=True, add_special_tokens = True)
