@@ -40,10 +40,7 @@ result = pd.concat([lapsha[['text', 'label']], panorama[['text', 'label']], lent
 result = result.dropna(subset = ['text'])
 result = result[result['text'] != '']
 
-
-
 result['text'] = result['text'].apply(clean_text)
-
 result = result.sample(frac = 1).reset_index(drop=True)  # shuffle result
 
 result.to_csv('../Data/preprocessed_data.csv', index=False)
