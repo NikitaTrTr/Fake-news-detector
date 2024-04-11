@@ -8,13 +8,9 @@ from pymorphy2 import MorphAnalyzer
 import pickle
 warnings.filterwarnings('ignore')
 
-mystem = Mystem()
-morph = MorphAnalyzer()
-
-model = pickle.load(open('../Models/word2vecmodel.pkl', 'rb'))
-
 
 def get_mean_w2v_vector(sentence):
+    model = pickle.load(open('../Models/word2vecmodel.pkl', 'rb'))
     sums = 0
     count = 0
 
@@ -35,6 +31,7 @@ def get_mean_w2v_vector(sentence):
 
 
 def clean_text(text):
+    morph = MorphAnalyzer()
     text = re.sub('[^а-яёА-ЯЁ]', ' ', text)
     text = word_tokenize(text.lower())
     text = [morph.normal_forms(token)[0] for token in text
