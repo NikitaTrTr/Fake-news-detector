@@ -6,15 +6,16 @@ from pymorphy2 import MorphAnalyzer
 import pickle
 from functions import clean_text
 from functions import vectorize
+from functions import rubert_predict_proba
 from streamlit_option_menu import option_menu
+from transformers import AutoModelForSequenceClassification, TextClassificationPipeline, AutoTokenizer
+
 
 warnings.filterwarnings('ignore')
 
 
 mystem = Mystem()
 morph = MorphAnalyzer()
-
-model = pickle.load(open('../Models/word2vecmodel.pkl', 'rb'))
 
 
 st.subheader("Fake News Detector")
@@ -42,34 +43,42 @@ if selected == "Проверка новостей":
         st.session_state["text"] = ""
 
 
-    def check_text(input, model):
-        text_news = vectorize(pd.Series([clean_text(str(input))], name='articleBody2'))
-        pred = model.predict_proba(text_news)
-        return pred[0][0]
+    def check_text(input, option, model):
+        if option == "ruBERT":
+            pred = predict_fake_proba(query, model)
+            return pred[0][1]['score']
+        else:
+            text_news = vectorize(pd.Series([clean_text(str(input))], name='articleBody2'))
+            pred = model.predict_proba(text_news)
+            return pred[0][0]
 
 
     option = st.selectbox(
         'Выберите модель',
         ('Logistic Regression', 'Decision Tree Classifier', 'Random Forest Classifier',
-        'Support Vector Classifier', 'CatBoost'))
+        'Support Vector Classifier', 'CatBoost', 'ruBERT'))
 
-    if option == "Logistic Regression":
-        model = pickle.load(open('../Models/logreg.pkl', 'rb'))
-    if option == "Decision Tree Classifier":
-        model = pickle.load(open('../Models/tree.pkl', 'rb'))
-    if option == "Random Forest Classifier":
-        model = pickle.load(open('../Models/random_forest.pkl', 'rb'))
-    if option == "Support Vector Classifier":
-        model = pickle.load(open('../Models/svc.pkl', 'rb'))
-    if option == "CatBoost":
-        model = pickle.load(open('../Models/catboost.pkl', 'rb'))
+   
 
     col1, col2 = st.columns([1, 1])
     with col1:
         if st.button("Проверить"):
             print(check_text(input, model))
             try:
-                ans = check_text(input, model)
+                if option == "Logistic Regression":
+                    model = pickle.load(open('../Models/logreg.pkl', 'rb'))
+                elif option == "Decision Tree Classifier":
+                    model = pickle.load(open('../Models/tree.pkl', 'rb'))
+                elif option == "Random Forest Classifier":
+                    model = pickle.load(open('../Models/random_forest.pkl', 'rb'))
+                elif option == "Support Vector Classifier":
+                    model = pickle.load(open('../Models/svc.pkl', 'rb'))
+                elif option == "CatBoost":
+                    model = pickle.load(open('../Models/catboost.pkl', 'rb'))
+                elif option == "ruBERT":
+                    model = AutoModelForSequenceClassification.from_pretrained('..Models/rubert/')
+                    
+                ans = check_text(input, option, model)
                 strin = "Вероятность того, что новость правдивая: " + str(round(ans * 100)) + "%"
             except:
                 strin = "К сожалению - это не новость"
