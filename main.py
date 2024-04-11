@@ -45,7 +45,7 @@ if selected == "Проверка новостей":
 
     def check_text(input, option, model):
         if option == "ruBERT":
-            pred = rubert_predict_proba(query, model)
+            pred = rubert_predict_proba(input, model)
             return pred[0][1]['score']
         else:
             text_news = vectorize(pd.Series([clean_text(str(input))], name='articleBody2'))
