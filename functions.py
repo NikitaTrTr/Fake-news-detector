@@ -8,7 +8,6 @@ from pymystem3 import Mystem
 mystem = Mystem()
 
 import nltk
-#nltk.download('stopwords')
 from nltk.corpus import stopwords
 nltk.download('punkt')
 s = stopwords.words('russian')
@@ -72,9 +71,9 @@ def vectorize(text, vectors_dim = 300):
 
 def rubert_predict_proba(query, model):
     tokenizer = AutoTokenizer.from_pretrained('./Models/rubert/', return_tensors='pt')
-    pipe = TextClassificationPipeline(model=model, tokenizer=tokenizer, device=0)
+    pipe = TextClassificationPipeline(model=model, tokenizer=tokenizer)
     
-    tokenized_query = tokenizer(query, truncation=True, max_length=50, padding=True, add_special_tokens = True)
-    prediction = pipe(tokenized_query.tolist(), return_all_scores=True)
+    # tokenized_query = tokenizer(query, truncation=True, max_length=50, padding=True, add_special_tokens = True)
+    prediction = pipe(query, return_all_scores=True)
     
     return prediction

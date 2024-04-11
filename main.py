@@ -23,8 +23,7 @@ st.markdown("""
 
 
 with st.sidebar:
-    selected = option_menu("Fake News Detector", ["Проверка новостей", 'О проекте'],
-        default_index=0)
+    selected = option_menu("Fake News Detector", ["Проверка новостей", 'О проекте'], default_index=0)
 
 if selected == "Проверка новостей":
     st.markdown('<p class="big-font">Наш сервис позволяет проверить на правдивость любую новость</p>', unsafe_allow_html=True)
@@ -38,7 +37,7 @@ if selected == "Проверка новостей":
 
     def check_text(input, option, model):
         if option == "ruBERT":
-            pred = rubert_predict_proba(input, model)
+            pred = rubert_predict_proba(clean_text(str(input)), model)
             return pred[0][1]['score']
         else:
             text_news = vectorize(pd.Series([clean_text(str(input))], name='articleBody2'))
