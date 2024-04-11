@@ -1,16 +1,22 @@
-import streamlit as st
 import pandas as pd
 import warnings
 import re
-from pymystem3 import Mystem
-from nltk.tokenize import word_tokenize
-from pymorphy2 import MorphAnalyzer
 import pickle
 warnings.filterwarnings('ignore')
 from transformers import TextClassificationPipeline, AutoTokenizer
+from pymystem3 import Mystem
+mystem = Mystem()
+
+import nltk
+#nltk.download('stopwords')
+from nltk.corpus import stopwords
+nltk.download('punkt')
+s = stopwords.words('russian')
+s.extend(['фото', 'новость', 'риа', 'лента', 'тасс', 'коммерсантъ'])
+stop_words = set(s)
 
 def get_mean_w2v_vector(sentence):
-    model = pickle.load(open('../Models/word2vecmodel.pkl', 'rb'))
+    model = pickle.load(open('./Models/word2vecmodel.pkl', 'rb'))
     sums = 0
     count = 0
 
@@ -30,14 +36,20 @@ def get_mean_w2v_vector(sentence):
     return sums / count
 
 
-def clean_text(text):
-    morph = MorphAnalyzer()
-    text = re.sub('[^а-яёА-ЯЁ]', ' ', text)
-    text = word_tokenize(text.lower())
-    text = [morph.normal_forms(token)[0] for token in text
-            if len(token) > 2]
-    text = " ".join(text)
-    return text
+def clean_text(phrase):
+    cleared_text = re.sub(r'[^а-яА-ЯёЁ]', ' ', phrase)
+    lower_text = cleared_text.lower()
+
+    words = lower_text.split()
+    filtered_words = [word for word in words if word not in stop_words]
+    filtered_text = ' '.join(filtered_words)
+
+    lemmatized_words = mystem.lemmatize(filtered_text, )
+
+    # Удаляем лишние пробелы и символ переноса строки, оставшиеся после лемматизации
+    lemmatized_text = ''.join(lemmatized_words).replace('\n', ' ')
+
+    return lemmatized_text.strip()
 
 
 def vectorize(text, vectors_dim = 300):
