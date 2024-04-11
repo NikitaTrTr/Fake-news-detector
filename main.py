@@ -14,7 +14,7 @@ warnings.filterwarnings('ignore')
 mystem = Mystem()
 morph = MorphAnalyzer()
 
-model = pickle.load(open('word2vecmodel.pkl', 'rb'))
+model = pickle.load(open('../Models/word2vecmodel.pkl', 'rb'))
 
 
 st.subheader("Fake News Detector")
@@ -54,15 +54,15 @@ if selected == "Проверка новостей":
         'Support Vector Classifier', 'CatBoost'))
 
     if option == "Logistic Regression":
-        model = pickle.load(open('logreg.pkl', 'rb'))
+        model = pickle.load(open('../Models/logreg.pkl', 'rb'))
     if option == "Decision Tree Classifier":
-        model = pickle.load(open('tree.pkl', 'rb'))
+        model = pickle.load(open('../Models/tree.pkl', 'rb'))
     if option == "Random Forest Classifier":
-        model = pickle.load(open('random_forest.pkl', 'rb'))
+        model = pickle.load(open('../Models/random_forest.pkl', 'rb'))
     if option == "Support Vector Classifier":
-        model = pickle.load(open('svc.pkl', 'rb'))
+        model = pickle.load(open('../Models/svc.pkl', 'rb'))
     if option == "CatBoost":
-        model = pickle.load(open('catboost.pkl', 'rb'))
+        model = pickle.load(open('../Models/catboost.pkl', 'rb'))
 
     col1, col2 = st.columns([1, 1])
     with col1:

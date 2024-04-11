@@ -17,7 +17,7 @@ warnings.filterwarnings('ignore')
 
 cores = multiprocessing.cpu_count()
 
-data = pd.read_csv('preprocessed_data.csv')
+data = pd.read_csv('../Data/preprocessed_data.csv')
 
 X = data.text
 y = data.label

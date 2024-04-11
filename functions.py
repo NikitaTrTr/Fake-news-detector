@@ -11,7 +11,7 @@ warnings.filterwarnings('ignore')
 mystem = Mystem()
 morph = MorphAnalyzer()
 
-model = pickle.load(open('word2vecmodel.pkl', 'rb'))
+model = pickle.load(open('../Models/word2vecmodel.pkl', 'rb'))
 
 
 def get_mean_w2v_vector(sentence):
