@@ -17,6 +17,17 @@ s.extend(['фото', 'новость', 'риа', 'лента', 'тасс', 'к�
 stop_words = set(s)
 
 
+def clean_text(text):
+    text = re.sub(r'http\S+', '', text)  # remove links
+    text = re.sub('[^а-яА-ЯёЁ]', ' ', text)  # remove not russian letters
+    text = word_tokenize(text.lower())  # tokenize by words aka split
+     # normal form of words
+     text = [morph.normal_forms(token)[0] for token in text
+            if token not in stop_words and len(token) > 2]
+    text = " ".join(text) # return string
+    return text
+
+
 lapsha = pd.read_csv('../Data/lapsha.csv', sep='\t')
 panorama = pd.read_csv('../Data/panorama.csv', sep='\t')
 lenta = pd.read_csv('../Data/lenta.csv')
@@ -29,15 +40,7 @@ result = pd.concat([lapsha[['text', 'label']], panorama[['text', 'label']], lent
 result = result.dropna(subset = ['text'])
 result = result[result['text'] != '']
 
-def clean_text(text):
-    text = re.sub(r'http\S+', '', text)  # remove links
-    text = re.sub('[^а-яА-ЯёЁ]', ' ', text)  # remove not russian letters
-    text = word_tokenize(text.lower())  # tokenize by words aka split
-     # normal form of words
-     text = [morph.normal_forms(token)[0] for token in text
-            if token not in stop_words and len(token) > 2]
-    text = " ".join(text) # return string
-    return text
+
 
 result['text'] = result['text'].apply(clean_text)
 
