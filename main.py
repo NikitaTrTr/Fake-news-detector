@@ -1,8 +1,5 @@
 import streamlit as st
 import pandas as pd
-import warnings
-from pymystem3 import Mystem
-from pymorphy2 import MorphAnalyzer
 import pickle
 from functions import clean_text
 from functions import vectorize
@@ -10,11 +7,8 @@ from functions import rubert_predict_proba
 from streamlit_option_menu import option_menu
 from transformers import AutoModelForSequenceClassification, TextClassificationPipeline, AutoTokenizer
 
-
+import warnings
 warnings.filterwarnings('ignore')
-
-
-# mystem = Mystem()
 
 
 st.subheader("Fake News Detector")
@@ -75,7 +69,7 @@ if selected == "Проверка новостей":
                     model = pickle.load(open('./Models/catboost.pkl', 'rb'))
                 if option == "ruBERT":
                     model = AutoModelForSequenceClassification.from_pretrained('./Models/rubert/')
-                    
+
                 ans = check_text(input, option, model)
                 strin = "Вероятность того, что новость правдивая: " + str(round(ans * 100)) + "%"
             except:
@@ -87,8 +81,3 @@ if selected == "Проверка новостей":
 
 else:
     st.write("Над проектом работали: Никита, Кирилл, Алексей, Иван")
-
-
-
-
-
