@@ -1,0 +1,61 @@
+import streamlit as st
+import pandas as pd
+import warnings
+import re
+from pymystem3 import Mystem
+from nltk.tokenize import word_tokenize
+from pymorphy2 import MorphAnalyzer
+import pickle
+warnings.filterwarnings('ignore')
+
+mystem = Mystem()
+morph = MorphAnalyzer()
+
+model = pickle.load(open('word2vecmodel.pkl', 'rb'))
+
+
+def get_mean_w2v_vector(sentence):
+    sums = 0
+    count = 0
+
+    try:
+        words = str(sentence).split()
+    except TypeError:
+        words = []
+
+    for w in words:
+        if w in model.wv:
+            sums += model.wv[w]
+            count += 1
+
+    if count == 0:
+        return 0
+
+    return sums / count
+
+
+def clean_text(text):
+    text = re.sub('[^а-яёА-ЯЁ]', ' ', text)
+    text = word_tokenize(text.lower())
+    text = [morph.normal_forms(token)[0] for token in text
+            if len(token) > 2]
+    text = " ".join(text)
+    return text
+
+
+def vectorize(text, vectors_dim = 300):
+
+  HIDDEN = vectors_dim
+
+  NewCols = ['col'+str(i) for i in range(HIDDEN)]
+
+  text_vectors = text.map(get_mean_w2v_vector)
+  text = pd.concat([text, text_vectors], axis = 1)
+
+  text.columns.values[0] = "text"
+  text.columns.values[1] = "vectors"
+
+  text[NewCols] = pd.DataFrame(text['vectors'].tolist(), index=text.index)
+  text.drop(['text', 'vectors'], axis=1, inplace=True)
+
+  return text
