@@ -56,3 +56,13 @@ def vectorize(text, vectors_dim = 300):
   text.drop(['text', 'vectors'], axis=1, inplace=True)
 
   return text
+
+
+def rubert_predict_proba(query, model):
+    tokenizer = AutoTokenizer.from_pretrained('DeepPavlov/rubert-base-cased', return_tensors='pt')
+    pipe = TextClassificationPipeline(model=model, tokenizer=tokenizer, device=0)
+    
+    tokenized_query = tokenizer(query, truncation=True, max_length=50, padding=True, add_special_tokens = True)
+    prediction = pipe(tokenized_query.tolist(), return_all_scores=True)
+    
+    return prediction
