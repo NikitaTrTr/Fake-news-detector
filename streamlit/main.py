@@ -1,14 +1,14 @@
+import sys
+sys.path.insert(1, 'ml_pipeline/')
 import streamlit as st
 import pandas as pd
 import pickle
-from ml_pipeline.utils import clean_text
-from ml_pipeline.utils import vectorize
-from ml_pipeline.utils import rubert_predict_proba
+from utils import clean_text
+from utils import vectorize
+from utils import rubert_predict_proba
 from streamlit_option_menu import option_menu
 from transformers import AutoModelForSequenceClassification
 
-import warnings
-warnings.filterwarnings('ignore')
 
 
 st.subheader("Fake News Detector")
@@ -40,7 +40,7 @@ if selected == "Проверка новостей":
             pred = rubert_predict_proba(clean_text(str(input)), model)
             return pred[0][1]['score']
         else:
-            text_news = vectorize(pd.Series([clean_text(str(input))], name='articleBody2'))
+            text_news = vectorize(pd.Series([clean_text(str(input))], name='text'))
             pred = model.predict_proba(text_news)
             return pred[0][0]
 
@@ -57,17 +57,17 @@ if selected == "Проверка новостей":
         if st.button("Проверить"):
             try:
                 if option == "Logistic Regression":
-                    model = pickle.load(open('../Models/logreg.pkl', 'rb'))
+                    model = pickle.load(open('../models/logreg.pkl', 'rb'))
                 if option == "Decision Tree Classifier":
-                    model = pickle.load(open('../Models/tree.pkl', 'rb'))
+                    model = pickle.load(open('../models/tree.pkl', 'rb'))
                 if option == "Random Forest Classifier":
-                    model = pickle.load(open('../Models/random_forest.pkl', 'rb'))
+                    model = pickle.load(open('../models/random_forest.pkl', 'rb'))
                 if option == "Support Vector Classifier":
-                    model = pickle.load(open('../Models/svc.pkl', 'rb'))
+                    model = pickle.load(open('../models/svc.pkl', 'rb'))
                 if option == "CatBoost":
-                    model = pickle.load(open('../Models/catboost.pkl', 'rb'))
+                    model = pickle.load(open('../models/catboost.pkl', 'rb'))
                 if option == "ruBERT":
-                    model = AutoModelForSequenceClassification.from_pretrained('./Models/rubert/')
+                    model = AutoModelForSequenceClassification.from_pretrained('../models/rubert/')
 
                 ans = check_text(input, option, model)
                 strin = "Вероятность того, что новость правдивая: " + str(round(ans * 100)) + "%"

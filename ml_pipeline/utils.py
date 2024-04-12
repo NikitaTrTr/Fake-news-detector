@@ -10,12 +10,13 @@ mystem = Mystem()
 import nltk
 from nltk.corpus import stopwords
 nltk.download('punkt')
+nltk.download('stopwords')
 s = stopwords.words('russian')
 s.extend(['фото', 'новость', 'риа', 'лента', 'тасс', 'коммерсантъ'])
 stop_words = set(s)
 
 def get_mean_w2v_vector(sentence):
-    model = pickle.load(open('../Models/word2vecmodel.pkl', 'rb'))
+    model = pickle.load(open('../models/word2vecmodel.pkl', 'rb'))
     sums = 0
     count = 0
 
@@ -70,7 +71,7 @@ def vectorize(text, vectors_dim = 300):
 
 
 def rubert_predict_proba(query, model):
-    tokenizer = AutoTokenizer.from_pretrained('./Models/rubert/', return_tensors='pt')
+    tokenizer = AutoTokenizer.from_pretrained('../models/rubert/', return_tensors='pt')
     pipe = TextClassificationPipeline(model=model, tokenizer=tokenizer)
     
     # tokenized_query = tokenizer(query, truncation=True, max_length=50, padding=True, add_special_tokens = True)
