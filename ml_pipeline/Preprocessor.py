@@ -30,6 +30,9 @@ class Preprocessor:
         result = result.sample(frac=1).reset_index(drop=True)  # shuffle result
         # result.to_csv('../../Data/preprocessed_data.csv', index=False)
         return result
+    def preprocess_test(self, data):
+        data['text'] = data['text'].apply(self.clean_text)
+        return data
 
     def clean_text(self, phrase):
         cleared_text = re.sub(r'[^а-яА-ЯёЁ]', ' ', phrase)
