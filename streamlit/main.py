@@ -47,7 +47,7 @@ if selected == "Проверка новостей":
 
     option = st.selectbox(
         'Выберите модель',
-        ('Logistic Regression', 'Decision Tree Classifier', 'Random Forest Classifier',
+        ('Logistic Regression', 'Random Forest Classifier',
         'Support Vector Classifier', 'CatBoost', 'ruBERT'))
 
    
@@ -55,25 +55,27 @@ if selected == "Проверка новостей":
     col1, col2 = st.columns([1, 1])
     with col1:
         if st.button("Проверить"):
+            model = None
             try:
                 if option == "Logistic Regression":
-                    model = pickle.load(open('../models/logreg.pkl', 'rb'))
-                if option == "Decision Tree Classifier":
-                    model = pickle.load(open('../models/tree.pkl', 'rb'))
+                    model = pickle.load(open('./models/logreg.pkl', 'rb'))
                 if option == "Random Forest Classifier":
-                    model = pickle.load(open('../models/random_forest.pkl', 'rb'))
+                    model = pickle.load(open('./models/random_forest.pkl', 'rb'))
                 if option == "Support Vector Classifier":
-                    model = pickle.load(open('../models/svc.pkl', 'rb'))
+                    model = pickle.load(open('./models/svc.pkl', 'rb'))
                 if option == "CatBoost":
-                    model = pickle.load(open('../models/catboost.pkl', 'rb'))
+                    model = pickle.load(open('./models/catboost.pkl', 'rb'))
                 if option == "ruBERT":
-                    model = AutoModelForSequenceClassification.from_pretrained('../models/rubert/')
-
-                ans = check_text(input, option, model)
-                strin = "Вероятность того, что новость правдивая: " + str(round(ans * 100)) + "%"
+                    model = AutoModelForSequenceClassification.from_pretrained('./models/rubert/')
             except:
-                strin = "К сожалению - это не новость"
-            st.write(strin)
+                st.write('Ошибка загрузки модели')
+            if model:
+                try:
+                    ans = check_text(input, option, model)
+                    strin = "Вероятность того, что новость правдивая: " + str(round(ans * 100)) + "%"
+                except:
+                    strin = "К сожалению - это не новость"
+                st.write(strin)
 
     with col2:
         st.button("Очистить поле", on_click=clear_text)
