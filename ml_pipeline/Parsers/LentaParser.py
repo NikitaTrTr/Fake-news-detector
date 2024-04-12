@@ -56,4 +56,4 @@ df = parser.get_articles(param_dict=param_dict, time_step=8)
 
 df1 = df.dropna(subset=['text'])
 df2 = df1[df1['text'] != '']
-df2.to_csv('../Data/lenta.csv', index = False)
+df2.to_csv('../../Data/lenta.csv', index = False)

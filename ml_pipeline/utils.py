@@ -15,7 +15,7 @@ s.extend(['фото', 'новость', 'риа', 'лента', 'тасс', 'к�
 stop_words = set(s)
 
 def get_mean_w2v_vector(sentence):
-    model = pickle.load(open('./Models/word2vecmodel.pkl', 'rb'))
+    model = pickle.load(open('../Models/word2vecmodel.pkl', 'rb'))
     sums = 0
     count = 0
 

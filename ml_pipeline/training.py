@@ -89,22 +89,22 @@ def prepare_data(X, y, vectors_dim = 300):
 X_full, y_full = prepare_data(X, y)
 
 
-pickle.dump(model, open('word2vecmodel.pkl', 'wb'))
+pickle.dump(model, open('../Models/word2vecmodel.pkl', 'wb'))
 
 
 logreg = LogisticRegression()
 logreg.fit(X_full, y_full)
-pickle.dump(logreg, open('logreg.pkl', 'wb'))
+pickle.dump(logreg, open('../Models/logreg.pkl', 'wb'))
 
 
 tree = DecisionTreeClassifier()
 tree.fit(X_full, y_full)
-pickle.dump(tree, open('tree.pkl', 'wb'))
+pickle.dump(tree, open('../Models/tree.pkl', 'wb'))
 
 
 random_forest = RandomForestClassifier()
 random_forest.fit(X_full, y_full)
-pickle.dump(random_forest, open('random_forest.pkl', 'wb'))
+pickle.dump(random_forest, open('../Models/random_forest.pkl', 'wb'))
 
 param_grid = [
   {'C': [1, 10, 100, 1000], 'kernel': ['linear']},
@@ -115,7 +115,7 @@ clf = GridSearchCV(estimator=SVC(), param_grid=param_grid, cv=3,  n_jobs=-1)
 clf.fit(X_full, y_full)
 svc_best = clf.best_estimator_
 svc_best.fit(X_full, y_full)
-pickle.dump(svc_best, open('svc.pkl', 'wb'))
+pickle.dump(svc_best, open('../Models/svc.pkl', 'wb'))
 
 X_train, X_test, y_train, y_test = train_test_split(data.text, data.label, test_size=0.25, random_state=42)
 
@@ -175,4 +175,4 @@ valid_pool = Pool(data=
 )
 model_catboost = CatBoostClassifier(verbose=500, use_best_model=True, task_type=task_type)
 model_catboost.fit(train_pool, eval_set=valid_pool)
-pickle.dump(model_catboost, open('catboost.pkl', 'wb'))
+pickle.dump(model_catboost, open('../Models/catboost.pkl', 'wb'))

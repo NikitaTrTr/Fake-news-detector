@@ -1,11 +1,11 @@
 import streamlit as st
 import pandas as pd
 import pickle
-from functions import clean_text
-from functions import vectorize
-from functions import rubert_predict_proba
+from ml_pipeline.utils import clean_text
+from ml_pipeline.utils import vectorize
+from ml_pipeline.utils import rubert_predict_proba
 from streamlit_option_menu import option_menu
-from transformers import AutoModelForSequenceClassification, TextClassificationPipeline, AutoTokenizer
+from transformers import AutoModelForSequenceClassification
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -57,15 +57,15 @@ if selected == "Проверка новостей":
         if st.button("Проверить"):
             try:
                 if option == "Logistic Regression":
-                    model = pickle.load(open('./Models/logreg.pkl', 'rb'))
+                    model = pickle.load(open('../Models/logreg.pkl', 'rb'))
                 if option == "Decision Tree Classifier":
-                    model = pickle.load(open('./Models/tree.pkl', 'rb'))
+                    model = pickle.load(open('../Models/tree.pkl', 'rb'))
                 if option == "Random Forest Classifier":
-                    model = pickle.load(open('./Models/random_forest.pkl', 'rb'))
+                    model = pickle.load(open('../Models/random_forest.pkl', 'rb'))
                 if option == "Support Vector Classifier":
-                    model = pickle.load(open('./Models/svc.pkl', 'rb'))
+                    model = pickle.load(open('../Models/svc.pkl', 'rb'))
                 if option == "CatBoost":
-                    model = pickle.load(open('./Models/catboost.pkl', 'rb'))
+                    model = pickle.load(open('../Models/catboost.pkl', 'rb'))
                 if option == "ruBERT":
                     model = AutoModelForSequenceClassification.from_pretrained('./Models/rubert/')
 
