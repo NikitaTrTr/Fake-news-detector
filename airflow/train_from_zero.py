@@ -29,7 +29,7 @@ dockerops_kwargs = { #X3X3X3X3
     "network_mode": "bridge",
 }
 
-@dag("from_parse_to_model", start_date=days_ago(0), schedule="@daily", catchup=False)
+@dag("from_parse_to_model", start_date=days_ago(1),  catchup=False)
 def taskflow():
     load = PythonOperator(
         task_id="from_parse_to_model",
