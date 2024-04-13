@@ -13,10 +13,10 @@ class Preprocessor:
         self.stop_words = set(s)
         self.mystem = Mystem()
 
-    def preprocess(self):
-        lapsha = pd.read_csv('../../Data/lapsha.csv', sep='\t')
-        panorama = pd.read_csv('../../Data/panorama.csv', sep='\t')
-        lenta = pd.read_csv('../../Data/lenta.csv')
+    def preprocess(self, lapsha, panorama, lenta):
+        #lapsha = pd.read_csv('../../Data/lapsha.csv', sep='\t')
+        #panorama = pd.read_csv('../../Data/panorama.csv', sep='\t')
+        #lenta = pd.read_csv('../../Data/lenta.csv')
 
         lapsha['label'] = 1  # is fake
         panorama['label'] = 1  # is fake
