@@ -77,7 +77,7 @@ if selected == "Проверка новостей":
                         ans = check_text(input, option, model)
                         strin = "Новость достоверна с вероятностью " + str(round(ans * 100)) + "%."
                         if ans<0.2:
-                            im = './streamlit/tinkoff/0.png')
+                            im = './streamlit/tinkoff/0.png'
                         elif ans<0.4:
                             im = './streamlit/tinkoff/1.png'
                         elif ans<0.6:
