@@ -78,22 +78,22 @@ if selected == "Проверка новостей":
                         strin = "Новость достоверна с вероятностью " + str(round(ans * 100)) + "%."
                         if ans<0.2:
                             im = './streamlit/tinkoff/0.png'
-                            #st.image('./streamlit/tinkoff/0.png')
+                            st.image('./streamlit/tinkoff/0.png')
                         elif ans<0.4:
                             im = './streamlit/tinkoff/1.png'
-                            #st.image('./streamlit/tinkoff/1.png')
+                            st.image('./streamlit/tinkoff/1.png')
                         elif ans<0.6:
                             im = './streamlit/tinkoff/2.png'
-                            #st.image('./streamlit/tinkoff/2.png')
+                            st.image('./streamlit/tinkoff/2.png')
                         elif ans<0.8:
                             im = './streamlit/tinkoff/3.png'
-                            #st.image('./streamlit/tinkoff/3.png')
+                            st.image('./streamlit/tinkoff/3.png')
                         else:
                             im = './streamlit/tinkoff/4.png'
-                            #st.image('./streamlit/tinkoff/4.png')
+                            st.image('./streamlit/tinkoff/4.png')
                     except:
-                        strin = "К сожалению, это не новость"
-
+                        strin = "Думаем, это не новость"
+                        im = './streamlit/tinkoff/42.png'
                     st.write(strin)
 
                     with col2:
