@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 import pandas as pd
 from fake_useragent import UserAgent
 
@@ -18,8 +18,8 @@ class PanoramaParser:
         body = tree.find('div', {'itemprop':'articleBody'}).find_all('p')
         return ' '.join(body[i].text for i in range(len(body)))
     
-    def get_articles(self, dateFrom, dateTo):
-        articles = pd.DataFrame(columns = ['text'])
+    def get_articles(self, dateFrom, dateTo, n_articles):
+        out = pd.DataFrame(columns = ['text'])
         counter = 0
         while dateFrom <= dateTo:
             print(f'Parsing articles dated {dateFrom}')
@@ -27,18 +27,15 @@ class PanoramaParser:
             for link in links:
                 content = self.get_article_content(link)
                 if content:
-                    articles.loc[len(articles)] = content
-            if counter % 10 == 0:
-                articles.to_csv('panorama.csv', index = False)
+                    out.loc[len(out)] = content
             dateFrom += timedelta(days = 1)
             counter += 1
-        return articles
+        current_datetime = datetime.now()
+        date_time_string = current_datetime.strftime("%Y-%m-%d_%H:%M:%S")
+        out = out.sample(n=n_articles, axis=0)
+        out.to_csv(f'data/panorama_{date_time_string}.csv', index=False)
+        return out
 
-
-parser = PanoramaParser()
-dateFrom, dateTo = date(2023, 4, 8), date(2024, 4, 8)
-df = parser.get_articles(dateFrom, dateTo)
-df.to_csv('../../Data/panorama.csv', index = False)
 
 
 

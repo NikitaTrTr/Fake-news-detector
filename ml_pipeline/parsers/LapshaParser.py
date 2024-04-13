@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -61,8 +63,7 @@ class LapshaParser:
         for link in links_to_articles:
             print(f'Parsing {link}')
             df.loc[len(df)] = self.get_article_text(link)
+        current_datetime = datetime.now()
+        date_time_string = current_datetime.strftime("%Y-%m-%d_%H:%M:%S")
+        df.to_csv(f'data/lapsha_{date_time_string}.csv', index=False)
         return df
-
-parser = LapshaParser()
-df = parser.get_articles()
-df.to_csv('../../Data/panorama.csv', index = False)
