@@ -72,9 +72,19 @@ if selected == "Проверка новостей":
             if model:
                 try:
                     ans = check_text(input, option, model)
-                    strin = "Вероятность того, что новость правдивая: " + str(round(ans * 100)) + "%"
+                    strin = "Новость достоверна с вероятностью" + str(round(ans * 100)) + "%."
+                    if ans<0.2:
+                        st.image('tinkoff/0.png')
+                    elif ans<0.4:
+                        st.image('tinkoff/1.png')
+                    elif ans<0.6:
+                        st.image('tinkoff/2.png')
+                    elif ans<0.8:
+                        st.image('tinkoff/3.png')
+                    else:
+                        st.image('tinkoff/4.png')
                 except:
-                    strin = "К сожалению - это не новость"
+                    strin = "К сожалению, это не новость"
                 st.write(strin)
 
     with col2:
