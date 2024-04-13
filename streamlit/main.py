@@ -92,7 +92,7 @@ if selected == "Проверка новостей":
                             im = './streamlit/tinkoff/4.png'
                             st.image('./streamlit/tinkoff/4.png')
                     except:
-                        strin = "Думаем, это не новость"
+                        strin = "Что-то не так с вашей новостью"
                         im = './streamlit/tinkoff/42.png'
                     st.write(strin)
 
