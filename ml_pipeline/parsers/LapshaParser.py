@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 
 import requests
@@ -11,7 +12,9 @@ import time
 
 class LapshaParser:
     def scroll_pages(self):
-        driver = webdriver.Firefox()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--headless')
+        driver = webdriver.Chrome(options=options)
         ref = 'https://lapsha.media/novoe/'
         driver.get(ref)
         time.sleep(30)
@@ -48,7 +51,7 @@ class LapshaParser:
             text.append(p.text)
         return ' '.join(text)
 
-    def get_articles(self, n_artircles=float('inf')):
+    def get_articles(self, n_articles=float('inf')):
         driver = self.scroll_pages()
         tree = BeautifulSoup(driver.page_source, 'html.parser')
         lenta = tree.find('div', {'class': 'lenta'})
@@ -57,11 +60,11 @@ class LapshaParser:
             if post.find('a', {'class': 'postblock-title__tag'}).text == 'Фейки':
                 link = post.find('meta').get('content')
                 links_to_articles.append(link)
-            if len(links_to_articles) == n_artircles:
+            if len(links_to_articles) == n_articles:
                 break
         df = pd.DataFrame(columns=['text'])
         for link in links_to_articles:
-            print(f'Parsing {link}')
+            logging.info(f'Lapsha: parsing {link}')
             df.loc[len(df)] = self.get_article_text(link)
         current_datetime = datetime.now()
         date_time_string = current_datetime.strftime("%Y-%m-%d_%H:%M:%S")

@@ -2,7 +2,7 @@ import requests as rq
 import pandas as pd
 from datetime import datetime, timedelta
 from fake_useragent import UserAgent
-
+import logging
 
 class LentaParser:
     def _get_url(self, param_dict: dict) -> str:
@@ -35,17 +35,16 @@ class LentaParser:
             param_copy['dateTo'] = (dateFrom + time_step).strftime('%Y-%m-%d')
             if dateFrom + time_step > dateTo:
                 param_copy['dateTo'] = dateTo.strftime('%Y-%m-%d')
-            print('Parsing articles from ' \
+            logging.info('Lenta: parsing articles from ' \
                   + param_copy['dateFrom'] + ' to ' + param_copy['dateTo'])
             out = pd.concat([out, self._get_search_table(param_copy)], ignore_index=True)
             dateFrom += time_step + timedelta(days=1)
             param_copy['dateFrom'] = dateFrom.strftime('%Y-%m-%d')
-        print('Finish')
         out = out.dropna(subset=['text'])
         out = out[out['text'] != '']
         current_datetime = datetime.now()
         date_time_string = current_datetime.strftime("%Y-%m-%d_%H:%M:%S")
-        out = out.sample(n=n_articles, axis=0)
+        out = out.sample(n=min(n_articles, len(out)), axis=0)
         out.to_csv(f'data/lenta_{date_time_string}.csv', index=False)
         return out
 
