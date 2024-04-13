@@ -10,9 +10,9 @@ import pickle
 from datetime import datetime
 
 class Trainer:
-    def __init__(self):
+    def __init__(self, data):
         cores = multiprocessing.cpu_count()
-        data = pd.read_csv('../Data/preprocessed_data.csv')
+        #data = pd.read_csv('../Data/preprocessed_data.csv')
         X = data.text
         y = data.label
         self.model = Word2Vec(min_count=20,
@@ -62,18 +62,22 @@ class Trainer:
     def get_trained_model(self, X, y, model_name, **parameters):
         if not model_name in ['Logistic_Regression', 'Random_Forest', 'SVM', 'Catboost']:
             raise ValueError(
-                f'Model type not supported. Supported types are {["Logistic Regression", "Random Forest", "SVM", "Catboost"]:}')
-        if model_name == 'Logistic Regression':
+                f'Model type not supported. Supported types are {["Logistic_Regression", "Random_Forest", "SVM", "Catboost"]:}')
+        if model_name == 'Logistic_Regression':
             model = LogisticRegression(**parameters)
-        if model_name == 'Random Forest':
+        if model_name == 'Random_Forest':
             model = RandomForestClassifier(**parameters)
         if model_name == 'SVM':
             model = SVC(**parameters)
         if model_name == 'Catboost':
             model = CatBoostClassifier(**parameters)
-        model.fit(self.prepare_data(X, y))
+        model.fit(*self.prepare_data(X, y))
         current_datetime = datetime.now()
         date_time_string = current_datetime.strftime("%Y-%m-%d_%H:%M:%S")
-        pickle.dump(model, open(f'{model_name}_{date_time_string}.pkl', 'wb'))
+        pickle.dump(model, open(f'models/{model_name}_{date_time_string}.pkl', 'wb'))
         return model
-
+    def fine_tune_model(self, X, y, model_name, **parameters):
+        model = pickle.load(open(f'models/{model_name}', 'rb'))
+        model.fit(*self.prepare_data(X, y))
+        pickle.dump(model, open(f'models/{model_name}', 'rb'))
+        return model
