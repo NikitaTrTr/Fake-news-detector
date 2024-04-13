@@ -73,6 +73,6 @@ def taskflow():
     data = parse_data()
     processed_data = preprocess_data(data['lenta'], data['panorama'])
     continue_train(processed_data)
-
+    push_update()
     taskflow()
 
